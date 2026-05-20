@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ KSTAR — Your Daily Fortune</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e0b14;
+    --cream: #faf7f2;
+    --gold: #c9a84c;
+    --gold-light: #e8d5a3;
+    --rose: #e8857a;
+    --indigo: #3d3580;
+    --mist: #8b7fa8;
+    --paper: #f5f0e8;
+    --card: #ffffff;
+    --border: rgba(201,168,76,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 40% at 20% 10%, rgba(61,53,128,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 80%, rgba(201,168,76,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 30% at 50% 50%, rgba(232,133,122,0.04) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Stars background */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: twinkle var(--dur) ease-in-out infinite;
+    opacity: 0;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 40px 0 24px;
+  }
+
+  .logo-mark {
+    display: inline-block;
+    font-family: 'Nanum Myeongjo', serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--ink) 0%, var(--indigo) 50%, var(--gold) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.3s forwards;
+  }
+
+  .tagline {
+    font-size: 12px;
+    color: var(--mist);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  /* ── DATE STRIP ── */
+  .date-strip {
+    background: var(--ink);
+    color: var(--gold-light);
+    border-radius: 12px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.5s forwards;
+  }
+
+  .date-strip .date-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--gold);
+  }
+
+  .date-strip .lunar {
+    font-size: 11px;
+    color: var(--mist);
+    text-align: right;
+  }
+
+  /* ── SIGN PICKER ── */
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 12px;
+    padding-left: 4px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .signs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .sign-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 6px 9px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sign-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(201,168,76,0.06), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .sign-btn:hover {
+    border-color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.18);
+  }
+
+  .sign-btn:hover::before { opacity: 1; }
+
+  .sign-btn.active {
+    background: var(--ink);
+    border-color: var(--gold);
+    box-shadow: 0 4px 24px rgba(61,53,128,0.35);
+  }
+
+  .sign-btn .sign-img { font-size: 24px; line-height: 1; }
+  .sign-btn .s-name { font-size: 9.5px; font-weight: 500; color: var(--ink); white-space: nowrap; transition: color 0.25s; }
+  .sign-btn .s-dates { font-size: 7.5px; color: var(--mist); text-align: center; line-height: 1.3; transition: color 0.25s; }
+  .sign-btn.active .s-name { color: var(--gold-light); }
+  .sign-btn.active .s-dates { color: rgba(139,127,168,0.8); }
+
+  .sign-btn .name {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    transition: color 0.25s;
+    white-space: nowrap;
+  }
+
+  .sign-btn .sign-dates {
+    font-size: 8.5px;
+    color: var(--mist);
+    transition: color 0.25s;
+    text-align: center;
+    line-height: 1.3;
+    white-space: nowrap;
+  }
+
+  .sign-btn.active .name {
+    color: var(--gold-light);
+  }
+
+  .sign-btn.active .sign-dates {
+    color: rgba(139,127,168,0.8);
+  }
+
+  /* Auto-detect banner */
+  .auto-detected {
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(61,53,128,0.08));
+    border: 1.5px solid rgba(201,168,76,0.35);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    animation: fadeUp 0.4s forwards;
+  }
+
+  .auto-detected.show { display: flex; }
+
+  .auto-detected .ad-emoji { font-size: 22px; }
+
+  .auto-detected .ad-text {
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .auto-detected .ad-text strong {
+    color: var(--indigo);
+    font-weight: 600;
+  }
+
+  /* ── BIRTH DATE INPUT ── */
+  .birth-card {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .birth-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+
+  .birth-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .birth-inputs select, .birth-inputs input {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    text-align: center;
+  }
+
+  .birth-inputs select:focus, .birth-inputs input:focus {
+    border-color: var(--gold);
+  }
+
+  .birth-row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .birth-row2 select {
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+    text-align: center;
+  }
+
+  .fortune-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--indigo), var(--ink));
+    color: var(--gold-light);
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fortune-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--rose) 100%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .fortune-btn:hover::before { opacity: 0.15; }
+
+  .fortune-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 30px rgba(61,53,128,0.35);
+  }
+
+  .fortune-btn:active { transform: translateY(0); }
+
+  /* ── FORTUNE CARD ── */
+  .fortune-card {
+    background: white;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 4px 40px rgba(14,11,20,0.06);
+    display: none;
+    opacity: 0;
+    animation: scaleIn 0.6s forwards;
+  }
+
+  .fortune-card.visible {
+    display: block;
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .fortune-header {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--indigo) 100%);
+    padding: 28px 24px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .fortune-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9a84c' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .fortune-sign-display {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .fortune-emoji {
+    font-size: 52px;
+    line-height: 1;
+    filter: drop-shadow(0 4px 12px rgba(201,168,76,0.4));
+  }
+
+  .fortune-sign-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: white;
+    line-height: 1.1;
+  }
+
+  .fortune-sign-info .dates {
+    font-size: 12px;
+    color: var(--mist);
+    margin-top: 2px;
+  }
+
+  .fortune-sign-info .element {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 3px 10px;
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 20px;
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Score bar */
+  .score-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 10px;
+    position: relative;
+  }
+
+  .score-item {
+    text-align: center;
+  }
+
+  .score-label {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 6px;
+  }
+
+  .score-circle {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 4px;
+    position: relative;
+  }
+
+  .score-circle svg {
+    transform: rotate(-90deg);
+  }
+
+  .score-circle .track {
+    fill: none;
+    stroke: rgba(255,255,255,0.1);
+    stroke-width: 3;
+  }
+
+  .score-circle .fill {
+    fill: none;
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .score-circle .number {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+  }
+
+  /* Fortune body */
+  .fortune-body {
+    padding: 24px;
+  }
+
+  .overall-fortune {
+    background: linear-gradient(135deg, var(--paper), white);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-left: 3px solid var(--gold);
+    position: relative;
+  }
+
+  .overall-fortune::before {
+    content: '✦';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 0 6px;
+    color: var(--gold);
+    font-size: 14px;
+  }
+
+  .overall-fortune p {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--ink);
+    font-style: italic;
+  }
+
+  /* Category tabs */
+  .category-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .category-tabs::-webkit-scrollbar { display: none; }
+
+  .cat-tab {
+    flex-shrink: 0;
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--mist);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .cat-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--gold-light);
+  }
+
+  .cat-tab:hover:not(.active) {
+    border-color: var(--gold);
+    color: var(--ink);
+  }
+
+  .category-content {
+    display: none;
+  }
+
+  .category-content.active {
+    display: block;
+    animation: fadeUp 0.4s forwards;
+  }
+
+  .detail-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #444;
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+
+  /* Lucky items */
+  .lucky-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .lucky-item {
+    background: var(--paper);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .lucky-item .lucky-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .lucky-item .lucky-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--mist);
+    margin-bottom: 4px;
+  }
+
+  .lucky-item .lucky-value {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* Compatibility */
+  .compat-section {
+    background: linear-gradient(135deg, rgba(61,53,128,0.05), rgba(232,133,122,0.05));
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid rgba(61,53,128,0.1);
+  }
+
+  .compat-section h4 {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-bottom: 12px;
+  }
+
+  .compat-signs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .compat-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .compat-badge.best {
+    background: rgba(201,168,76,0.15);
+    color: #8a6800;
+  }
+
+  .compat-badge.avoid {
+    background: rgba(232,133,122,0.15);
+    color: #a04040;
+  }
+
+  /* Tarot mini */
+  .tarot-mini {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .tarot-card-display {
+    width: 54px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--indigo), #1a1540);
+    border-radius: 8px;
+    border: 1px solid rgba(201,168,76,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+
+  .tarot-info h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .tarot-info p {
+    font-size: 12px;
+    color: var(--mist);
+    line-height: 1.6;
+  }
+
+  /* Daily tip */
+  .daily-tip {
+    background: linear-gradient(135deg, var(--gold), #b8860b);
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .daily-tip .tip-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .daily-tip p {
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* ── SHARE / PREMIUM ── */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .btn-share {
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    background: white;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-share:hover {
+    border-color: var(--gold);
+    background: var(--paper);
+  }
+
+  .btn-premium {
+    padding: 12px;
+    background: linear-gradient(135deg, var(--gold), #b8860b);
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .btn-premium:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(201,168,76,0.4);
+  }
+
+  /* ── PREMIUM UPSELL ── */
+  .premium-banner {
+    background: linear-gradient(135deg, var(--indigo) 0%, #1a1540 50%, var(--ink) 100%);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 24px;
+    text-align: center;
+    border: 1px solid rgba(201,168,76,0.2);
+    position: relative;
+    overflow: hidden;
+    display: none;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .premium-banner.visible {
+    display: block;
+  }
+
+  .premium-banner::before {
+    content: '✦ ✦ ✦';
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: rgba(201,168,76,0.3);
+    font-size: 10px;
+    letter-spacing: 8px;
+  }
+
+  .premium-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    font-weight: 700;
+  }
+
+  .premium-banner h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .premium-banner p {
+    font-size: 13px;
+    color: var(--mist);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .premium-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+
+  .pf-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--gold-light);
+  }
+
+  .pf-item::before {
+    content: '✦';
+    font-size: 8px;
+    color: var(--gold);
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .price-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--gold);
+  }
+
+  .price-per {
+    font-size: 13px;
+    color: var(--mist);
+  }
+
+  .btn-subscribe {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--gold), #b8860b);
+    border: none;
+    border-radius: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.3s;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-subscribe:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(201,168,76,0.5);
+  }
+
+  .trial-note {
+    font-size: 11px;
+    color: var(--mist);
+    margin-top: 10px;
+  }
+
+  /* ── LOADING ── */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(14,11,20,0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .loading-overlay.show {
+    display: flex;
+  }
+
+  .loading-crystal {
+    font-size: 48px;
+    animation: spin 3s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--gold-light);
+    text-align: center;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .loading-dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .loading-dots span {
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: dot 1.2s ease-in-out infinite;
+  }
+
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot {
+    0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+    40% { transform: scale(1.2); opacity: 1; }
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0 14px;
+    z-index: 50;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 12px;
+    transition: all 0.2s;
+    border: none;
+    background: none;
+  }
+
+  .nav-item.active .nav-icon { filter: none; }
+  .nav-item.active .nav-label { color: var(--indigo); font-weight: 600; }
+
+  .nav-icon { font-size: 20px; filter: grayscale(0.5); }
+
+  .nav-label {
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--mist);
+    transition: color 0.2s;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--gold-light);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    opacity: 0;
+    transition: all 0.4s;
+    pointer-events: none;
+    z-index: 200;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── PAGE SECTIONS ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Compatibility page */
+  .compat-page-header {
+    text-align: center;
+    padding: 20px 0 28px;
+  }
+
+  .compat-page-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .compat-page-header p {
+    font-size: 13px;
+    color: var(--mist);
+  }
+
+  .compat-picker {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .compat-sign-box {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .compat-sign-box:hover {
+    border-color: var(--gold);
+  }
+
+  .compat-sign-box .big-emoji { font-size: 36px; margin-bottom: 6px; }
+  .compat-sign-box .sign-name { font-size: 12px; color: var(--mist); }
+
+  .compat-vs {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--mist);
+    text-align: center;
+  }
+
+  .compat-result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1.5px solid var(--border);
+    text-align: center;
+    display: none;
+  }
+
+  .compat-result-card.show { display: block; animation: scaleIn 0.5s forwards; }
+
+  .compat-score-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .compat-score-label {
+    font-size: 12px;
+    color: var(--mist);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+  }
+
+  /* Utilities */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Tarot page */
+  .tarot-page-header {
+    text-align: center;
+    padding: 20px 0 28px;
+  }
+
+  .tarot-page-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .tarot-deck {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .tarot-face-down {
+    aspect-ratio: 2/3;
+    background: linear-gradient(135deg, var(--indigo), #1a1540);
+    border-radius: 14px;
+    border: 1.5px solid rgba(201,168,76,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tarot-face-down::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(201,168,76,0.05) 8px,
+      rgba(201,168,76,0.05) 9px
+    );
+  }
+
+  .tarot-face-down:hover {
+    transform: scale(1.04);
+    border-color: var(--gold);
+    box-shadow: 0 8px 24px rgba(61,53,128,0.4);
+  }
+
+  .tarot-face-down.flipped {
+    background: linear-gradient(135deg, var(--paper), white);
+    border-color: var(--gold);
+    flex-direction: column;
+    gap: 4px;
+    cursor: default;
+  }
+
+  .tarot-face-down.flipped .card-emoji { font-size: 32px; }
+  .tarot-face-down.flipped .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 10px;
+    color: var(--ink);
+    text-align: center;
+    padding: 0 4px;
+    line-height: 1.3;
+  }
+
+  /* AI Chat page */
+  .chat-section {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border: 1.5px solid var(--border);
+  }
+
+  .chat-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  .question-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .q-chip {
+    padding: 7px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--mist);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--paper);
+  }
+
+  .q-chip:hover {
+    border-color: var(--gold);
+    color: var(--ink);
+    background: white;
+  }
+
+  .ai-answer {
+    background: linear-gradient(135deg, var(--paper), white);
+    border-radius: 14px;
+    padding: 16px;
+    border-left: 3px solid var(--gold);
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--ink);
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    display: none;
+  }
+
+  .ai-answer.show { display: block; animation: fadeUp 0.5s forwards; }
+
+  .ask-input-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ask-input {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    background: var(--paper);
+  }
+
+  .ask-input:focus { border-color: var(--gold); }
+
+  .ask-btn {
+    padding: 12px 16px;
+    background: var(--ink);
+    color: var(--gold-light);
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .ask-btn:hover {
+    background: var(--indigo);
+  }
+
+  /* ── AD SLOTS ── */
+  .ad-slot {
+    margin-bottom: 20px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px dashed rgba(201,168,76,0.25);
+    background: rgba(250,247,242,0.8);
+    padding: 12px 16px;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  .ad-label {
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #bbb;
+    margin-bottom: 4px;
+  }
+  .ad-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .ad-placeholder span {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.1em;
+  }
+  .ad-placeholder p {
+    font-size: 11px;
+    color: #aaa;
+  }
+  .ad-placeholder a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .ad-placeholder a:hover { text-decoration: underline; }
+
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading">
+  <div class="loading-crystal">🔮</div>
+  <div class="loading-text">Reading the cosmos for you...</div>
+  <div class="loading-dots"><span></span><span></span><span></span></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="wrapper">
+
+  <!-- ── HOME PAGE ── -->
+  <div class="page active" id="page-home">
+
+    <header>
+      <div class="logo-mark">✦ Korean Cosmic Fortune ✦</div>
+      <div class="logo">KSTAR</div>
+      <div class="tagline">Your Daily Fortune · 오늘의 운세</div>
+    </header>
+
+    <div class="date-strip" id="dateStrip">
+      <div>
+        <div class="date-main" id="todayDate"></div>
+        <div style="font-size:11px;color:#8b7fa8;margin-top:2px;">2026 · 병오년 丙午年</div>
+      </div>
+      <div class="lunar" id="lunarDate">Loading lunar date...</div>
+    </div>
+
+    <div class="section-label" style="opacity:1;animation:none;">☽ Choose your sign</div>
+
+    <div class="signs-grid" id="signsGrid">
+      <!-- Signs generated by JS -->
+    </div>
+
+
+    <!-- AD SLOT 1: 별자리 그리드 아래 배너 -->
+    <div class="ad-slot" id="adSlot1">
+      <div class="ad-label">Advertisement</div>
+      <!-- AdSense 승인 후 아래 ins 태그로 교체하세요 -->
+      <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins> -->
+      <div class="ad-placeholder">
+        <span>✦ Sponsored</span>
+        <p>Advertise here · <a href="mailto:hello@kstar.app">Contact us</a></p>
+      </div>
+    </div>
+
+    <!-- Birth info card -->
+    <div class="birth-card">
+      <h3>✨ Personalize Your Reading</h3>
+      <div class="birth-inputs">
+        <select id="birthMonth">
+          <option value="">Month</option>
+          <option value="1">Jan</option><option value="2">Feb</option>
+          <option value="3">Mar</option><option value="4">Apr</option>
+          <option value="5">May</option><option value="6">Jun</option>
+          <option value="7">Jul</option><option value="8">Aug</option>
+          <option value="9">Sep</option><option value="10">Oct</option>
+          <option value="11">Nov</option><option value="12">Dec</option>
+        </select>
+        <input type="number" id="birthDay" placeholder="Day" min="1" max="31">
+        <input type="number" id="birthYear" placeholder="Year" min="1920" max="2008">
+      </div>
+      <div class="birth-row2">
+        <select id="birthHour">
+          <option value="">Birth Hour (opt)</option>
+          <option value="0">00:00–01:00 子시</option>
+          <option value="1">01:00–03:00 丑시</option>
+          <option value="2">03:00–05:00 寅시</option>
+          <option value="3">05:00–07:00 卯시</option>
+          <option value="4">07:00–09:00 辰시</option>
+          <option value="5">09:00–11:00 巳시</option>
+          <option value="6">11:00–13:00 午시</option>
+          <option value="7">13:00–15:00 未시</option>
+          <option value="8">15:00–17:00 申시</option>
+          <option value="9">17:00–19:00 酉시</option>
+          <option value="10">19:00–21:00 戌시</option>
+          <option value="11">21:00–23:00 亥시</option>
+        </select>
+        <select id="genderSelect">
+          <option value="">Gender (opt)</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <button class="fortune-btn" onclick="generateFortune()">
+        🔮 &nbsp; Read My Fortune
+      </button>
+    </div>
+
+    <!-- Fortune result card -->
+    <div class="fortune-card" id="fortuneCard">
+      <div class="fortune-header">
+        <div class="fortune-sign-display">
+          <div class="fortune-emoji" id="resultEmoji"></div>
+          <div class="fortune-sign-info">
+            <h2 id="resultName"></h2>
+            <div class="dates" id="resultDates"></div>
+            <span class="element" id="resultElement"></span>
+          </div>
+        </div>
+        <div class="score-row" id="scoreRow"></div>
+      </div>
+
+      <div class="fortune-body">
+        <!-- Overall -->
+        <div class="overall-fortune">
+          <p id="overallText"></p>
+        </div>
+
+        <!-- Category tabs -->
+        <div class="category-tabs">
+          <button class="cat-tab active" onclick="switchCat(this,'love')">💕 Love</button>
+          <button class="cat-tab" onclick="switchCat(this,'career')">💼 Career</button>
+          <button class="cat-tab" onclick="switchCat(this,'wealth')">💰 Wealth</button>
+          <button class="cat-tab" onclick="switchCat(this,'health')">🌿 Health</button>
+        </div>
+
+        <div class="category-content active" id="cat-love"></div>
+        <div class="category-content" id="cat-career"></div>
+        <div class="category-content" id="cat-wealth"></div>
+        <div class="category-content" id="cat-health"></div>
+
+        <!-- Lucky items -->
+        <div class="lucky-row" id="luckyRow"></div>
+
+        <!-- Tarot card of the day -->
+        <div class="tarot-mini" id="tarotMini"></div>
+
+        <!-- Daily tip -->
+        <div class="daily-tip" id="dailyTip"></div>
+
+
+        <!-- AD SLOT 2: 운세 결과 하단 -->
+        <div class="ad-slot" id="adSlot2" style="margin-top:16px;margin-bottom:0;">
+          <div class="ad-label">Advertisement</div>
+          <!-- <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXX" data-ad-slot="XXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins> -->
+          <div class="ad-placeholder">
+            <span>✦ Sponsored</span>
+            <p>Advertise here · <a href="mailto:hello@kstar.app">Contact us</a></p>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="action-row">
+          <button class="btn-share" onclick="shareResult()">📤 Share</button>
+          <button class="btn-premium" onclick="showPremium()">👑 Go Premium</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Premium banner (shown after fortune) -->
+    <div class="premium-banner" id="premiumBanner">
+      <div class="premium-badge">✦ K-STAR PREMIUM ✦</div>
+      <h3>Unlock Your Full Cosmic Blueprint</h3>
+      <p>Saju (사주) analysis, full birth chart, monthly forecast & relationship compatibility — powered by AI</p>
+      <div class="premium-features">
+        <div class="pf-item">Saju 사주 Reading</div>
+        <div class="pf-item">Full Birth Chart</div>
+        <div class="pf-item">Monthly Forecast</div>
+        <div class="pf-item">Deep Compatibility</div>
+        <div class="pf-item">AI Q&A Unlimited</div>
+        <div class="pf-item">No Ads Ever</div>
+      </div>
+      <div class="price-row">
+        <span class="price-amount">$4.99</span>
+        <span class="price-per">/ month</span>
+      </div>
+      <button class="btn-subscribe" onclick="showToast('🎉 Starting your 7-day free trial!')">
+        Start 7-Day Free Trial
+      </button>
+      <div class="trial-note">Cancel anytime · No charge for 7 days</div>
+    </div>
+
+  </div><!-- /page-home -->
+
+
+  <!-- ── COMPATIBILITY PAGE ── -->
+  <div class="page" id="page-compat">
+    <div class="compat-page-header">
+      <h2>궁합 Compatibility</h2>
+      <p>Discover your cosmic connection</p>
+    </div>
+
+    <div class="compat-picker">
+      <div class="compat-sign-box" id="compatSign1" onclick="pickCompatSign(1)">
+        <div class="big-emoji" id="cs1emoji">♈</div>
+        <div class="sign-name" id="cs1name">Pick Sign</div>
+      </div>
+      <div class="compat-vs">vs</div>
+      <div class="compat-sign-box" id="compatSign2" onclick="pickCompatSign(2)">
+        <div class="big-emoji" id="cs2emoji">♉</div>
+        <div class="sign-name" id="cs2name">Pick Sign</div>
+      </div>
+    </div>
+
+    <button class="fortune-btn" onclick="checkCompat()" style="margin-bottom:20px;">
+      💞 &nbsp; Check Compatibility
+    </button>
+
+    <div class="compat-result-card" id="compatResult">
+      <div class="compat-score-big" id="compatScoreNum">87%</div>
+      <div class="compat-score-label">Cosmic Match Score</div>
+      <p id="compatText" style="font-size:14px;color:#444;line-height:1.8;font-family:'Playfair Display',serif;font-style:italic;"></p>
+    </div>
+
+    <!-- Sign selector modal -->
+    <div id="compatModal" style="display:none;position:fixed;inset:0;background:rgba(14,11,20,0.7);z-index:100;backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;">
+      <div style="background:white;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;max-height:70vh;overflow-y:auto;">
+        <h3 style="font-family:'Playfair Display',serif;font-size:20px;margin-bottom:16px;text-align:center;">Choose a Sign</h3>
+        <div id="compatModalSigns" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── TAROT PAGE ── -->
+  <div class="page" id="page-tarot">
+    <div class="tarot-page-header">
+      <h2>타로 Tarot</h2>
+      <p>Pick 3 cards for your daily reading</p>
+    </div>
+
+    <div class="tarot-deck" id="tarotDeck">
+      <!-- Generated by JS -->
+    </div>
+
+    <div id="tarotReading" style="display:none;background:white;border-radius:20px;padding:20px;border:1.5px solid var(--border);animation:fadeUp 0.5s forwards;">
+      <h4 style="font-family:'Playfair Display',serif;font-size:16px;margin-bottom:12px;color:var(--ink);">✦ Your 3-Card Reading</h4>
+      <p id="tarotReadingText" style="font-size:14px;line-height:1.8;color:#444;font-style:italic;font-family:'Playfair Display',serif;"></p>
+    </div>
+  </div>
+
+  <!-- ── ASK AI PAGE ── -->
+  <div class="page" id="page-ask">
+    <div style="text-align:center;padding:20px 0 28px;">
+      <h2 style="font-family:'Playfair Display',serif;font-size:28px;color:var(--ink);margin-bottom:6px;">AI 운세 Ask the Stars</h2>
+      <p style="font-size:13px;color:var(--mist);">Powered by cosmic intelligence</p>
+    </div>
+
+    <div class="chat-section">
+      <h3>Popular Questions</h3>
+      <div class="question-chips">
+        <div class="q-chip" onclick="askQuestion(this.textContent)">Will I find love this month?</div>
+        <div class="q-chip" onclick="askQuestion(this.textContent)">Should I change careers?</div>
+        <div class="q-chip" onclick="askQuestion(this.textContent)">What's my lucky day this week?</div>
+        <div class="q-chip" onclick="askQuestion(this.textContent)">How's my money luck today?</div>
+        <div class="q-chip" onclick="askQuestion(this.textContent)">Best time to make a big decision?</div>
+        <div class="q-chip" onclick="askQuestion(this.textContent)">Am I compatible with Scorpio?</div>
+      </div>
+      <div id="aiAnswer" class="ai-answer"></div>
+    </div>
+
+    <div class="chat-section">
+      <h3>Ask Anything</h3>
+      <div class="ask-input-row">
+        <input type="text" class="ask-input" id="askInput" placeholder="e.g. Is today good for investments?">
+        <button class="ask-btn" onclick="askCustom()">✦</button>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,var(--indigo),#1a1540);border-radius:20px;padding:20px;text-align:center;border:1px solid rgba(201,168,76,0.2);">
+      <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;">FREE USERS · 3 questions/day</div>
+      <p style="font-size:13px;color:var(--mist);margin-bottom:14px;">Upgrade for unlimited AI cosmic guidance</p>
+      <button class="btn-subscribe" onclick="showToast('✨ Starting free trial!')" style="max-width:220px;">
+        Unlock Unlimited · $4.99/mo
+      </button>
+    </div>
+  </div>
+
+</div><!-- /wrapper -->
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="switchPage('home',this)">
+    <span class="nav-icon">🔮</span>
+    <span class="nav-label">Today</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('compat',this)">
+    <span class="nav-icon">💞</span>
+    <span class="nav-label">Match</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('tarot',this)">
+    <span class="nav-icon">🃏</span>
+    <span class="nav-label">Tarot</span>
+  </button>
+  <button class="nav-item" onclick="switchPage('ask',this)">
+    <span class="nav-icon">✨</span>
+    <span class="nav-label">Ask AI</span>
+  </button>
+</nav>
+
+<script>
+// ─────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────
+
+const SIGNS = [
+  { name: 'Aries', emoji: '🐏', symbol: '♈', dates: 'Mar 21 – Apr 19', shortDates: 'Mar 21\nApr 19', element: '🔥 Fire', korean: '양자리', color: '#e8857a', planet: 'Mars' },
+  { name: 'Taurus', emoji: '🐂', symbol: '♉', dates: 'Apr 20 – May 20', shortDates: 'Apr 20\nMay 20', element: '🌍 Earth', korean: '황소자리', color: '#7ab87a', planet: 'Venus' },
+  { name: 'Gemini', emoji: '👯', symbol: '♊', dates: 'May 21 – Jun 20', shortDates: 'May 21\nJun 20', element: '💨 Air', korean: '쌍둥이자리', color: '#f0d060', planet: 'Mercury' },
+  { name: 'Cancer', emoji: '🦀', symbol: '♋', dates: 'Jun 21 – Jul 22', shortDates: 'Jun 21\nJul 22', element: '💧 Water', korean: '게자리', color: '#7ab8d8', planet: 'Moon' },
+  { name: 'Leo', emoji: '🦁', symbol: '♌', dates: 'Jul 23 – Aug 22', shortDates: 'Jul 23\nAug 22', element: '🔥 Fire', korean: '사자자리', color: '#f0a030', planet: 'Sun' },
+  { name: 'Virgo', emoji: '🌾', symbol: '♍', dates: 'Aug 23 – Sep 22', shortDates: 'Aug 23\nSep 22', element: '🌍 Earth', korean: '처녀자리', color: '#a0c060', planet: 'Mercury' },
+  { name: 'Libra', emoji: '⚖️', symbol: '♎', dates: 'Sep 23 – Oct 22', shortDates: 'Sep 23\nOct 22', element: '💨 Air', korean: '천칭자리', color: '#d8a0d8', planet: 'Venus' },
+  { name: 'Scorpio', emoji: '🦂', symbol: '♏', dates: 'Oct 23 – Nov 21', shortDates: 'Oct 23\nNov 21', element: '💧 Water', korean: '전갈자리', color: '#8060a0', planet: 'Pluto' },
+  { name: 'Sagittarius', emoji: '🏹', symbol: '♐', dates: 'Nov 22 – Dec 21', shortDates: 'Nov 22\nDec 21', element: '🔥 Fire', korean: '사수자리', color: '#e08060', planet: 'Jupiter' },
+  { name: 'Capricorn', emoji: '🐐', symbol: '♑', dates: 'Dec 22 – Jan 19', shortDates: 'Dec 22\nJan 19', element: '🌍 Earth', korean: '염소자리', color: '#808080', planet: 'Saturn' },
+  { name: 'Aquarius', emoji: '🏺', symbol: '♒', dates: 'Jan 20 – Feb 18', shortDates: 'Jan 20\nFeb 18', element: '💨 Air', korean: '물병자리', color: '#60a0d8', planet: 'Uranus' },
+  { name: 'Pisces', emoji: '🐟', symbol: '♓', dates: 'Feb 19 – Mar 20', shortDates: 'Feb 19\nMar 20', element: '💧 Water', korean: '물고기자리', color: '#a0d8d8', planet: 'Neptune' },
+];
+
+const TAROT_CARDS = [
+  { name: 'The Sun', emoji: '☀️', meaning: 'Joy, vitality, success and clarity illuminate your path.' },
+  { name: 'The Moon', emoji: '🌙', meaning: 'Trust your intuition. Hidden truths are surfacing.' },
+  { name: 'The Star', emoji: '⭐', meaning: 'Hope and renewal guide your next steps forward.' },
+  { name: 'The Tower', emoji: '🏰', meaning: 'Sudden change clears the way for new foundations.' },
+  { name: 'The Lovers', emoji: '💕', meaning: 'Choices in love and values demand honest alignment.' },
+  { name: 'The Wheel', emoji: '🎡', meaning: 'Cycles turn in your favor. Luck is shifting.' },
+  { name: 'The World', emoji: '🌍', meaning: 'Completion, achievement, and wholeness await.' },
+  { name: 'The Hermit', emoji: '🕯️', meaning: 'Seek inner wisdom before making your next move.' },
+  { name: 'Strength', emoji: '🦁', meaning: 'Courage and patience conquer every challenge.' },
+];
+
+const FORTUNE_DATA = {
+  Aries: {
+    overall: ["The fiery energy of Mars aligns with your boldest ambitions today. A door you've been waiting on begins to swing open — move toward it without hesitation.", "Unexpected momentum arrives from an unlikely source. The cosmos urge you to lead, not follow."],
+    love: ["Your magnetic energy is at its peak. For singles, a chance encounter carries weight beyond the obvious. For coupled Aries, speak the desire you've been keeping quiet.", "Venus stirs restlessness in your heart. Rather than suppressing it, channel it into honest conversation — your partner is more ready to hear you than you think."],
+    career: ["A bold idea you've been holding back deserves a stage today. The stars favor those who initiate. Waiting for perfect timing will only delay what's already meant for you.", "A colleague's unexpected support could accelerate a project that felt stuck. Accept the help graciously."],
+    wealth: ["Mars in your second house suggests a financial risk you've been contemplating has a stronger foundation than your anxiety suggests. Do your final research — then commit.", "Avoid impulsive purchases before noon. Your financial clarity sharpens as the day progresses."],
+    health: ["Your energy levels run high today but can tip into depletion by evening. Prioritize hydration and a brief midday reset to sustain momentum through the full day.", "Physical activity before 10am significantly amplifies your mental focus for the rest of the day."],
+  },
+  Taurus: {
+    overall: ["Venus casts a warm glow over your day, drawing comfort, beauty, and unexpected generosity into your orbit. What you've cultivated is beginning to yield.", "Slow and steady wins this particular race. Trust your instincts — you know this path better than anyone is giving you credit for."],
+    love: ["Stability in love feels particularly sweet today. If you're building something long-term, an important conversation clarifies shared values and deepens your bond.", "For singles, someone already in your circle sees you in a new light. The shift is subtle but real."],
+    career: ["Your methodical approach earns quiet respect from someone in a position of influence. The recognition may not be public, but it will matter when it counts.", "A creative project benefits from your aesthetic sensibility today. Trust your eye."],
+    wealth: ["A slow-building investment shows its first promising signs. Hold steady — the Saturn discipline you've applied is about to reward you in tangible ways.", "Review recurring expenses. One subscription you've forgotten is draining more than you realize."],
+    health: ["Your body craves nourishment over stimulation today. A luxurious meal, a long walk, or a creative activity restores what stress has quietly depleted.", "Pay attention to your jaw and shoulders — you carry tension there when you don't express your needs."],
+  },
+  Gemini: {
+    overall: ["Mercury's quick transit stirs your mind with a dozen brilliant flickers. The challenge is not generating ideas — it's choosing which one deserves your full focus today.", "Conversations you initiate before 2pm carry unusual weight. Choose your words as carefully as you'd choose a door to walk through."],
+    love: ["Your wit and warmth are irresistible today. A playful exchange deepens unexpectedly into something more genuine. Don't retreat from the sincerity.", "For couples, lighten the mood with humor — it's the love language you both sometimes forget you share."],
+    career: ["A project requiring both analysis and creativity is exactly where you shine today. Your ability to bridge two perspectives earns you unexpected credit.", "An email or message you send today opens a door you hadn't anticipated. Proofread carefully."],
+    wealth: ["Two financial paths present themselves. The more exciting one carries more risk than its surface suggests. Consult your numbers before your enthusiasm.", "Short-term gains are available today — but they're not aligned with your larger financial vision."],
+    health: ["Your nervous system is working overtime. Deliberately quiet your phone for 30 minutes before bed to prevent the sleep disruption your schedule can't afford right now.", "Breathing exercises during commute or breaks deliver outsized calm."],
+  },
+  Cancer: {
+    overall: ["The Moon, your celestial guardian, wraps today in emotional clarity rather than confusion. Trust what you feel — your instincts are sharper than logic right now.", "Home and family matters carry unexpected sweetness today. Something small but meaningful is on its way."],
+    love: ["Your emotional intelligence is your superpower today. A loved one needs to be heard more than advised. The gift of your full presence is more healing than any words.", "For singles, your vulnerability today is not weakness — it's the exact frequency that attracts the right person."],
+    career: ["Behind-the-scenes work pays off in a quiet but significant way. You don't need to be seen today to make progress that counts.", "Trust your intuition about a colleague's motives — you're reading the situation correctly."],
+    wealth: ["Home-related investments or improvements show strong cosmic alignment today. What you put into your space will multiply in value and comfort.", "Avoid lending money today, even to someone you trust. The timing is simply off."],
+    health: ["Emotional and physical health are deeply linked for you today. Release what you've been holding by journaling, cooking, or a long shower — let the ritual be the medicine.", "Your stomach reflects your anxiety. Warm, simple foods over anything cold or heavy."],
+  },
+  Leo: {
+    overall: ["The Sun in harmonious aspect fills your confidence with genuine light rather than performance. You don't need to try today — your presence simply commands attention.", "A moment of recognition is coming, and you will have earned every bit of it."],
+    love: ["Your warmth is magnetic today. Romantic energy is especially charged in the evening — plan accordingly. For couples, a spontaneous gesture of affection rekindles familiar fire.", "For singles, someone is watching you with considerably more interest than their composed demeanor reveals."],
+    career: ["Leadership opportunities present themselves — step forward without apology. Your clarity of vision today is exactly what the group around you needs.", "Creative work receives extraordinary recognition. Share it widely."],
+    wealth: ["A side income idea that's been sitting in the back of your mind is worth developing. The cosmic window for launching something new opens wider this week.", "A luxury purchase is fine today — you've been disciplined long enough to enjoy it guilt-free."],
+    health: ["Your heart — both literally and metaphorically — needs generous care today. Cardio that feels like play rather than punishment serves you best right now.", "Sun exposure in the early morning energizes rather than depletes. Start outside if you can."],
+  },
+  Virgo: {
+    overall: ["Mercury sharpens your already precise mind to a fine edge today. A problem you've been analyzing from the same angle suddenly reveals a new solution when you shift your vantage point.", "Your attention to what others overlook is your greatest advantage. Use it deliberately."],
+    love: ["Service is your love language, but today the stars ask you to receive rather than give. Allow someone to take care of you — this is practice in something you genuinely need.", "For singles, someone admires your quiet competence more than they've said."],
+    career: ["A detail you flagged weeks ago becomes critically relevant today. Your thoroughness is vindicated. Let yourself feel the quiet satisfaction of having been right.", "A system or process you improve today will save significant time for months to come."],
+    wealth: ["Your analytical approach to money is your greatest protection. A financial decision that seems sound deserves one more round of scrutiny — you'll catch what everyone else missed.", "Organizing your financial records today prevents a headache next month."],
+    health: ["Your body communicates subtly before it communicates loudly. A recurring small discomfort is worth addressing now rather than managing later.", "Digestive health reflects overall stress levels today — eat slowly and deliberately."],
+  },
+  Libra: {
+    overall: ["Venus graces your chart with balance and beauty. The harmony you seek in your relationships becomes more accessible today than it's been in weeks.", "A decision you've been weighing finally tips toward clarity. Trust the direction it's leaning — your instincts are sound."],
+    love: ["The aesthetic of love — how it looks, how it feels — matters deeply to you today. Create a moment of beauty with someone you care about. It will be remembered longer than you expect.", "For singles, a social setting or creative gathering holds unexpectedly romantic potential."],
+    career: ["Collaboration yields exceptional results today. Your ability to synthesize opposing views into a cohesive solution earns you allies in important places.", "Aesthetic input on a project carries more strategic weight than the team realizes. Trust your eye."],
+    wealth: ["Financial partnerships or joint accounts deserve a review today. The numbers are telling you something you've been too polite to address.", "A purchase that enhances your environment or workflow is a sound investment right now."],
+    health: ["Your body responds well to beauty and balance — even the aesthetics of your space affect your vitality. Tidy, brighten, or arrange something today.", "Your kidneys and lower back call for attention. Hydration and gentle stretching are your medicine."],
+  },
+  Scorpio: {
+    overall: ["Pluto's transformative depth is working quietly but powerfully in your favor. Something is being shed so that something truer can emerge. Trust the process even when it's uncomfortable.", "Your powers of perception are at their sharpest. What you notice today will prove significant later."],
+    love: ["Intensity in your relationships runs high today. Rather than managing it, dive in. The depth of connection available to you right now is exactly what your soul requires.", "For singles, an encounter that feels charged with unspoken understanding deserves your attention."],
+    career: ["Research, investigation, and uncovering what's hidden are your strong suits today. A strategic advantage becomes available to those who look beneath the surface.", "A power dynamic at work shifts quietly in your direction."],
+    wealth: ["Hidden financial patterns reveal themselves today upon closer examination. What you discover may surprise you — but it will ultimately serve your long-term security.", "Other people's resources may play a role in an upcoming opportunity. Consider the terms carefully."],
+    health: ["Emotional detox is as vital as physical cleansing. Release what's been festering through honest expression rather than continued suppression.", "Sexual and reproductive health deserve mindful attention today."],
+  },
+  Sagittarius: {
+    overall: ["Jupiter, your planetary guardian, expands what you touch today. The horizon you've been aiming toward is closer than the current view suggests. Keep moving.", "A philosophical insight arrives, and it will shift how you approach something you thought you already understood."],
+    love: ["Freedom within connection is your ideal, and today the universe finds a way to offer it. A relationship that respects your independence deepens significantly.", "For singles, someone from a different background or culture introduces a perspective that captures your imagination in unexpected ways."],
+    career: ["Long-distance or cross-cultural opportunities deserve serious consideration right now. The discomfort of the unfamiliar is where your growth lives.", "Publishing, teaching, or sharing your knowledge gains significant traction today."],
+    wealth: ["An investment in education, travel, or expanding your expertise delivers returns that compound over years rather than months. Spend on growth deliberately.", "Avoid over-committing your resources in enthusiasm — your reach may currently exceed your financial grasp."],
+    health: ["Movement, adventure, and fresh air are your best medicine. A walk with a destination, a new trail, or even a new neighborhood refreshes your spirit.", "Your hips and thighs store your unexpressed energy — move them deliberately."],
+  },
+  Capricorn: {
+    overall: ["Saturn rewards discipline with unmistakable results today. A professional achievement you've been working toward quietly arrives at the door. Open it with confidence.", "Your long-game approach is vindicated by a development that others are only now catching up to."],
+    love: ["Vulnerability is not weakness — it is the one frontier that still makes you uncomfortable, and it is precisely where your deepest satisfaction lies. One small step today.", "For couples, acknowledging a partner's contribution with specific words — not gestures alone — strengthens the foundation significantly."],
+    career: ["Authority, leadership, and structural thinking are your strengths in the spotlight today. An opportunity to demonstrate your capacity for responsibility arrives — accept it.", "A project you've quietly shepherded reaches a significant milestone. Acknowledge yourself."],
+    wealth: ["Your financial foundation is more solid than your anxiety allows you to feel. Review the actual numbers — not the story you tell about them.", "A real estate, retirement, or long-term investment decision aligns well with current cosmic cycles."],
+    health: ["Your skeleton and joints — particularly knees and bones — ask for care today. Weight-bearing exercise and calcium-rich foods support you.", "Rest is not laziness. You've earned the right to stop working tonight."],
+  },
+  Aquarius: {
+    overall: ["Uranus charges your thinking with original electricity today. An idea that challenges conventional wisdom is precisely the one worth developing.", "Your community and your future are more connected than today's circumstances suggest. Plant seeds without needing to see the harvest yet."],
+    love: ["Your unique approach to love — unconventional, intellectually charged — is exactly what someone in your orbit has been looking for. Stop second-guessing your authenticity.", "For couples, a shared interest or cause deepens your bond in ways romantic gestures alone cannot."],
+    career: ["Technology, innovation, and future-forward thinking give you a decisive edge today. Share your vision with the right audience — you'll find more receptivity than you expected.", "Group projects and collaborative efforts are unusually productive under today's sky."],
+    wealth: ["An unconventional financial opportunity may look unorthodox but holds genuine merit. Research it fully before dismissing it on the basis of form alone.", "Cryptocurrency, tech investments, or emerging industries align with your cosmic timing."],
+    health: ["Your circulation and nervous system benefit from movement that surprises the body — dance, a new sport, or an unexpected route home. Break your routine deliberately.", "Humanitarian work or community contribution restores your energy more than conventional rest."],
+  },
+  Pisces: {
+    overall: ["Neptune's veil lifts just enough for you to see the path forward with unusual clarity today. Act on what your intuition reveals before the rational mind constructs its objections.", "Creative and spiritual work reaches a peak of sensitivity and expression. What you make today carries genuine power."],
+    love: ["Your empathy today is a superpower with one vulnerability: you may absorb another's emotional state without recognizing it's not your own. Maintain your loving center.", "For singles, someone whose inner world matches the richness of yours is present in your life. Look with your heart, not your eyes."],
+    career: ["Intuitive work, creative endeavors, and helping professions all benefit from today's heightened sensitivity. Trust the feeling that something needs doing — and do it.", "A compassionate approach to a difficult colleague dissolves a tension that logic alone couldn't resolve."],
+    wealth: ["Be cautious of emotionally-driven financial decisions today. Your generosity is a gift, but not everyone who approaches you has earned your full financial trust.", "An artistic or spiritual investment holds long-term value that your inner knowing already senses."],
+    health: ["Your immune system is your canary in a coal mine — when it flags something, listen. Rest, water, and solitude are your restoration trio today.", "Feet and lymphatic system need attention. A warm salt bath tonight is medicine, not luxury."],
+  },
+};
+
+const LUCKY_DATA = {
+  numbers: [[3,7,21],[4,8,22],[5,9,23],[6,10,24],[1,7,25],[2,8,26],[3,9,27],[4,10,28],[5,6,29],[7,11,30],[8,12,31],[9,13,20]],
+  colors: ['Ruby Red','Forest Green','Sunflower Yellow','Ocean Blue','Amber Gold','Sage Green','Rose Quartz','Amethyst','Burnt Orange','Slate Grey','Electric Blue','Sea Green'],
+  times: ['9:00 AM','2:30 PM','11:00 AM','4:00 PM','7:00 PM','10:30 AM','3:00 PM','6:30 PM','1:00 PM','8:00 AM','5:00 PM','12:00 PM'],
+};
+
+let selectedSign = null;
+let selectedSignIndex = -1;
+
+// ─────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────
+
+document.addEventListener('DOMContentLoaded', () => {
+  createStars();
+  renderSignPicker();
+  renderTarotDeck();
+  populateCompatModal();
+  setDateInfo();
+});
+
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 50; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.cssText = `
+      left: ${Math.random() * 100}%;
+      top: ${Math.random() * 100}%;
+      --dur: ${2 + Math.random() * 4}s;
+      animation-delay: ${Math.random() * 5}s;
+    `;
+    container.appendChild(star);
+  }
+}
+
+function setDateInfo() {
+  const today = new Date();
+  const opts = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  document.getElementById('todayDate').textContent = today.toLocaleDateString('en-US', opts);
+  // Simplified lunar date display
+  const lunarMonths = ['정월','이월','삼월','사월','오월','유월','칠월','팔월','구월','시월','동월','섣달'];
+  const lunarDays = ['초하루','초이틀','초사흘','초나흘','초닷새','초엿새','초이레','초여드레','초아흐레','열흘','열하루','열이틀','열사흘','열나흘','보름','열엿새','열이레','열여드레','열아흐레','스무날','스무하루','스무이틀','스무사흘','스무나흘','스무닷새','스무엿새','스무이레','스무여드레','스무아흐레','그믐'];
+  const m = today.getMonth();
+  const d = Math.min(today.getDate() - 1, 29);
+  document.getElementById('lunarDate').innerHTML = `음력 ${lunarMonths[m]} ${lunarDays[d]}<br>병오년 丙午年`;
+}
+
+function renderSignPicker() {
+  const container = document.getElementById('signsGrid');
+  SIGNS.forEach((sign, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'sign-btn';
+    const [from, to] = sign.dates.split('\u2013');
+    btn.innerHTML = `<span class="sign-img">${sign.emoji}</span><span class="s-name">${sign.name}</span><span class="s-dates">${(from||'').trim()}<br>${(to||'').trim()}</span>`;
+    btn.title = `${sign.name} (${sign.korean}) · ${sign.dates}`;
+    btn.onclick = () => selectSign(i, btn);
+    container.appendChild(btn);
+  });
+}
+
+function selectSign(index, btn) {
+  document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedSign = SIGNS[index];
+  selectedSignIndex = index;
+
+  // Auto-set birth date fields based on sign
+  const signMonths = [3,4,5,6,7,8,9,10,11,12,1,2];
+  document.getElementById('birthMonth').value = signMonths[index];
+}
+
+// ─────────────────────────────────────────
+// FORTUNE GENERATION
+// ─────────────────────────────────────────
+
+function generateFortune() {
+  if (!selectedSign) {
+    showToast('✨ Please select your zodiac sign first!');
+    return;
+  }
+
+  document.getElementById('loading').classList.add('show');
+
+  setTimeout(() => {
+    document.getElementById('loading').classList.remove('show');
+    renderFortune();
+  }, 2200);
+}
+
+function renderFortune() {
+  const sign = selectedSign;
+  const idx = selectedSignIndex;
+  const data = FORTUNE_DATA[sign.name];
+
+  // Header
+  document.getElementById('resultEmoji').textContent = sign.emoji;
+  document.getElementById('resultName').textContent = sign.name + ' · ' + sign.korean;
+  document.getElementById('resultDates').textContent = sign.dates;
+  document.getElementById('resultElement').textContent = sign.element;
+
+  // Scores — seeded to date + sign for consistency
+  const today = new Date();
+  const seed = today.getDate() + today.getMonth() * 31 + idx * 7;
+  const scores = {
+    Overall: clampScore(60 + ((seed * 13) % 40)),
+    Love: clampScore(55 + ((seed * 17) % 45)),
+    Career: clampScore(50 + ((seed * 11) % 50)),
+    Wealth: clampScore(45 + ((seed * 19) % 55)),
+  };
+  const scoreColors = ['#c9a84c', '#e8857a', '#7ab8d8', '#7ab87a'];
+  const scoreRow = document.getElementById('scoreRow');
+  scoreRow.innerHTML = '';
+  Object.entries(scores).forEach(([label, score], i) => {
+    const circ = 2 * Math.PI * 18;
+    const offset = circ - (score / 100) * circ;
+    scoreRow.innerHTML += `
+      <div class="score-item">
+        <div class="score-label">${label}</div>
+        <div class="score-circle">
+          <svg viewBox="0 0 44 44" width="44" height="44">
+            <circle class="track" cx="22" cy="22" r="18"/>
+            <circle class="fill" cx="22" cy="22" r="18"
+              stroke="${scoreColors[i]}"
+              stroke-dasharray="${circ}"
+              stroke-dashoffset="${offset}"/>
+          </svg>
+          <div class="number">${score}</div>
+        </div>
+      </div>`;
+  });
+
+  // Overall text
+  const overallIdx = (seed % 2);
+  document.getElementById('overallText').textContent = data.overall[overallIdx];
+
+  // Category content
+  const catData = { love: data.love, career: data.career, wealth: data.wealth, health: data.health };
+  Object.entries(catData).forEach(([cat, texts]) => {
+    const textIdx = (seed + cat.length) % texts.length;
+    document.getElementById(`cat-${cat}`).innerHTML = `
+      <div class="detail-text">${texts[textIdx]}</div>`;
+  });
+
+  // Lucky items
+  const luckyNums = LUCKY_DATA.numbers[idx];
+  const luckyColor = LUCKY_DATA.colors[idx];
+  const luckyTime = LUCKY_DATA.times[idx];
+  document.getElementById('luckyRow').innerHTML = `
+    <div class="lucky-item"><div class="lucky-icon">🎲</div><div class="lucky-label">Lucky Numbers</div><div class="lucky-value">${luckyNums.join(' · ')}</div></div>
+    <div class="lucky-item"><div class="lucky-icon">🎨</div><div class="lucky-label">Lucky Color</div><div class="lucky-value">${luckyColor}</div></div>
+    <div class="lucky-item"><div class="lucky-icon">⏰</div><div class="lucky-label">Best Time</div><div class="lucky-value">${luckyTime}</div></div>
+  `;
+
+  // Tarot mini
+  const tarot = TAROT_CARDS[seed % TAROT_CARDS.length];
+  document.getElementById('tarotMini').innerHTML = `
+    <div class="tarot-card-display">${tarot.emoji}</div>
+    <div class="tarot-info">
+      <h4>Today's Card: ${tarot.name}</h4>
+      <p>${tarot.meaning}</p>
+    </div>
+  `;
+
+  // Daily tip
+  const tips = [
+    "Write down one thing you're grateful for before opening any app today.",
+    "Reach out first — the conversation you've been avoiding holds unexpected gifts.",
+    "Wear the color associated with your lucky shade. The energetic shift is subtle but real.",
+    "Put your phone down for 20 minutes and simply observe your surroundings.",
+    "A small act of generosity today will circle back to you within the week.",
+    "Trust the first impression you get from a new person today.",
+    "The task you've been delaying is the one with the most energy trapped inside it.",
+  ];
+  document.getElementById('dailyTip').innerHTML = `
+    <div class="tip-icon">💡</div>
+    <p>${tips[(seed + idx) % tips.length]}</p>
+  `;
+
+  // Show card
+  const card = document.getElementById('fortuneCard');
+  card.style.display = 'block';
+  card.classList.add('visible');
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+
+  // Show premium after delay
+  setTimeout(() => {
+    const banner = document.getElementById('premiumBanner');
+    banner.style.display = 'block';
+    banner.classList.add('visible');
+  }, 3000);
+}
+
+function clampScore(n) { return Math.min(99, Math.max(50, n)); }
+
+function switchCat(btn, cat) {
+  document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.category-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(`cat-${cat}`).classList.add('active');
+}
+
+// ─────────────────────────────────────────
+// COMPATIBILITY
+// ─────────────────────────────────────────
+
+let compatPicking = 0;
+let compatChoices = [null, null];
+
+function populateCompatModal() {
+  const container = document.getElementById('compatModalSigns');
+  SIGNS.forEach((sign, i) => {
+    const btn = document.createElement('button');
+    btn.style.cssText = 'padding:12px 8px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--mist);transition:all 0.2s;';
+    btn.innerHTML = `<span style="font-size:22px">${sign.emoji}</span>${sign.name}`;
+    btn.onclick = () => {
+      compatChoices[compatPicking - 1] = i;
+      document.getElementById(`cs${compatPicking}emoji`).textContent = sign.emoji;
+      document.getElementById(`cs${compatPicking}name`).textContent = sign.name;
+      closeCompatModal();
+    };
+    container.appendChild(btn);
+  });
+}
+
+function pickCompatSign(n) {
+  compatPicking = n;
+  const modal = document.getElementById('compatModal');
+  modal.style.display = 'flex';
+}
+
+function closeCompatModal() {
+  document.getElementById('compatModal').style.display = 'none';
+}
+
+document.getElementById('compatModal').addEventListener('click', function(e) {
+  if (e.target === this) closeCompatModal();
+});
+
+function checkCompat() {
+  if (compatChoices[0] === null || compatChoices[1] === null) {
+    showToast('💞 Select two signs first!');
+    return;
+  }
+
+  document.getElementById('loading').classList.add('show');
+  setTimeout(() => {
+    document.getElementById('loading').classList.remove('show');
+
+    const a = compatChoices[0], b = compatChoices[1];
+    const seed = (a * 12 + b + b * 12 + a) % 50;
+    const score = 50 + seed + (Math.abs(a - b) % 5) * 3;
+    const clamped = Math.min(98, Math.max(55, score));
+
+    const s1 = SIGNS[a], s2 = SIGNS[b];
+    const messages = [
+      `${s1.name} and ${s2.name} share a rare cosmic wavelength. Where ${s1.name} brings ${s1.element.split(' ')[1].toLowerCase()} energy, ${s2.name} complements with grounding balance. Your emotional rhythms sync in ways that make difficult conversations feel natural and safe.`,
+      `The tension between ${s1.name}'s instincts and ${s2.name}'s approach creates productive friction — the kind that builds, not destroys. Growth happens between you precisely because you're not identical.`,
+      `${s1.name} and ${s2.name} have what astrologers call a "growth match" — not always easy, but deeply rewarding. The universe pairs you to evolve, not just to enjoy.`,
+    ];
+
+    document.getElementById('compatScoreNum').textContent = clamped + '%';
+    document.getElementById('compatText').textContent = messages[Math.abs(a - b) % 3];
+
+    const result = document.getElementById('compatResult');
+    result.style.display = 'block';
+    result.classList.add('show');
+  }, 1800);
+}
+
+// ─────────────────────────────────────────
+// TAROT
+// ─────────────────────────────────────────
+
+let tarotFlipped = 0;
+let tarotSelected = [];
+
+function renderTarotDeck() {
+  const deck = document.getElementById('tarotDeck');
+  deck.innerHTML = '';
+  tarotFlipped = 0;
+  tarotSelected = [];
+  document.getElementById('tarotReading').style.display = 'none';
+
+  const shuffled = [...TAROT_CARDS].sort(() => Math.random() - 0.5);
+  shuffled.forEach((card, i) => {
+    const div = document.createElement('div');
+    div.className = 'tarot-face-down';
+    div.innerHTML = '✦';
+    div.onclick = () => flipTarot(div, card, i);
+    deck.appendChild(div);
+  });
+}
+
+function flipTarot(el, card, i) {
+  if (el.classList.contains('flipped') || tarotFlipped >= 3) return;
+  el.classList.add('flipped');
+  el.innerHTML = `<span class="card-emoji">${card.emoji}</span><span class="card-name">${card.name}</span>`;
+  tarotFlipped++;
+  tarotSelected.push(card);
+
+  if (tarotFlipped === 3) {
+    const reading = document.getElementById('tarotReading');
+    const text = `Past · ${tarotSelected[0].name}: ${tarotSelected[0].meaning} Present · ${tarotSelected[1].name}: ${tarotSelected[1].meaning} Future · ${tarotSelected[2].name}: ${tarotSelected[2].meaning}`;
+    document.getElementById('tarotReadingText').textContent = text;
+    reading.style.display = 'block';
+    setTimeout(() => reading.scrollIntoView({ behavior: 'smooth' }), 300);
+  }
+}
+
+// ─────────────────────────────────────────
+// ASK AI
+// ─────────────────────────────────────────
+
+let questionsAsked = 0;
+
+const AI_ANSWERS = {
+  'Will I find love this month?': "The stars show movement in your love sector this month — specifically around the middle period when Venus forms a favorable angle to your natal chart. For those already in relationships, an important conversation unlocks a deeper level of closeness. For singles, a connection made through a shared activity or introduced by a mutual friend carries authentic long-term potential. The universe's advice: be available, not eager.",
+  'Should I change careers?': "The cosmic timing for career transitions favors those who prepare quietly and move decisively. Saturn's current position suggests any change made now should be grounded in skill and research rather than restlessness. If you've been building expertise in a new direction, the next 60 days are favorable for taking that first visible step. If the desire is primarily escape, the stars counsel patience and inner work first.",
+  "What's my lucky day this week?": "This week's peak cosmic alignment falls on Thursday — Jupiter and Mercury form a rare harmonious trine that amplifies communication, decision-making, and new beginnings. Schedule important conversations, interviews, or launches for Thursday morning if possible. Tuesday also carries favorable energy for financial matters specifically.",
+  "How's my money luck today?": "Today's financial energy is steady rather than spectacular — which is actually ideal for long-term wealth building. The stars favor reviewing, organizing, and consolidating rather than bold new moves. One overlooked income source or savings opportunity will become visible if you look with fresh eyes at your current financial picture today.",
+  'Best time to make a big decision?': "The cosmic calendar this month shows a decisive window opening between the 18th and 23rd, when the Moon moves through a waxing phase in harmony with your chart's house of clarity. Decisions made in this window tend to stick. Avoid major commitments on days when Mercury appears to slow — double-check your thinking and give yourself 24 hours before finalizing.",
+  'Am I compatible with Scorpio?': "Scorpio's depth and intensity find a fascinating mirror in your chart's complexity. The initial attraction is unmistakable — your emotional intelligence matches theirs, and neither of you surfaces easily. The challenge lies in the power dynamics: both signs tend to protect vulnerability with control. When both people choose radical honesty, this pairing reaches genuine profundity. When they don't, it can circle in silence. The potential here is extraordinary — and so is the requirement for courage.",
+};
+
+async function askQuestion(question) {
+  if (questionsAsked >= 3) {
+    showToast('✨ Upgrade to Premium for unlimited questions!');
+    showPremium();
+    return;
+  }
+
+  const answerEl = document.getElementById('aiAnswer');
+  answerEl.style.display = 'block';
+  answerEl.classList.add('show');
+  answerEl.textContent = '✦ The stars are consulting...';
+
+  document.getElementById('loading').classList.add('show');
+
+  try {
+    // Try the actual API first
+    const signContext = selectedSign ? `The user's zodiac sign is ${selectedSign.name} (${selectedSign.korean}).` : '';
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1000,
+        system: `You are KSTAR, an elegant AI fortune teller combining Western astrology with Korean cosmic wisdom (사주/운세). ${signContext} Give insightful, poetic, specific horoscope readings in 2-3 sentences. Use a warm, wise, Playfair-serif literary tone. Reference actual astrological concepts. Never say you're an AI.`,
+        messages: [{ role: "user", content: question }]
+      })
+    });
+    const data = await response.json();
+    document.getElementById('loading').classList.remove('show');
+    const answer = data.content?.find(b => b.type === 'text')?.text || AI_ANSWERS[question] || getGenericAnswer(question);
+    answerEl.textContent = answer;
+    questionsAsked++;
+  } catch {
+    document.getElementById('loading').classList.remove('show');
+    const answer = AI_ANSWERS[question] || getGenericAnswer(question);
+    answerEl.textContent = answer;
+    questionsAsked++;
+  }
+}
+
+async function askCustom() {
+  const input = document.getElementById('askInput');
+  const question = input.value.trim();
+  if (!question) return;
+  input.value = '';
+  await askQuestion(question);
+}
+
+function getGenericAnswer(q) {
+  return `The cosmos see your question clearly. The current planetary alignment suggests that what you seek is closer than doubt allows you to feel. Trust the information that arrives in quiet moments — it carries more signal than the noise. Your timing is better than you believe.`;
+}
+
+// ─────────────────────────────────────────
+// NAVIGATION
+// ─────────────────────────────────────────
+
+function switchPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${name}`).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─────────────────────────────────────────
+// UTILITIES
+// ─────────────────────────────────────────
+
+function showPremium() {
+  const banner = document.getElementById('premiumBanner');
+  banner.style.display = 'block';
+  banner.classList.add('visible');
+  setTimeout(() => banner.scrollIntoView({ behavior: 'smooth' }), 100);
+}
+
+function shareResult() {
+  if (!selectedSign) return;
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  const text = `✨ My ${selectedSign.name} fortune on ${today} from KSTAR!\n\nCheck yours at kstar.app`;
+  if (navigator.share) {
+    navigator.share({ title: 'KSTAR Daily Fortune', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('📋 Copied to clipboard!'));
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Enter key on ask input
+document.getElementById('askInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') askCustom();
+});
+</script>
+</body>
+</html>
